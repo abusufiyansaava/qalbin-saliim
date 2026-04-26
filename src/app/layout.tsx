@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   
   title: {
     template: "%s | Qalbin Saliim Charity Organisation",
-    default: "Qalbin Salim Organisation | Loving and Caring Heart",
+    default: "Qalbin Saliim Organisation | Loving and Caring Heart",
   },
   description: "Empowering underserved communities across Africa through clean water, food, education, healthcare, and sustainable development. Donate, volunteer, or partner with us today.",
   

@@ -8,7 +8,7 @@ interface FAQItem {
   _id: string
   question: string
   answer: any[] // Sanity block content
-  category?: string
+  category?: string // Optional category
 }
 
 interface FAQAccordionProps {
@@ -19,8 +19,16 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null)
   const [filter, setFilter] = useState<string>('all')
 
-  const categories = ['all', ...Array.from(new Set(faqs.map(f => f.category).filter(Boolean)))]
+  // ✅ Build categories array - filter out undefined/null and dedupe
+  const categories = ['all', ...Array.from(
+    new Set(
+      faqs
+        .map(f => f.category)
+        .filter((cat): cat is string => !!cat) // ✅ Type guard: only keep defined strings
+    )
+  )]
 
+  // ✅ Filter FAQs based on selected category
   const filteredFaqs = filter === 'all' 
     ? faqs 
     : faqs.filter(f => f.category === filter)
@@ -51,14 +59,14 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-      {/* Category Filter */}
-      {categories.length > 2 && (
+      {/* Category Filter - Only show if we have categories besides 'all' */}
+      {categories.length > 1 && (
         <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setFilter(cat)}
+                onClick={() => setFilter(cat)} // ✅ cat is now guaranteed to be string
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   filter === cat
                     ? 'bg-primary text-white'

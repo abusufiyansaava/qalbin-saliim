@@ -7,9 +7,10 @@ import { AnimatedCounter } from '@/components/shared/AnimatedCounter'
 import { NewsletterForm } from '@/components/shared/NewsletterForm'
 
 // 🔑 Queries (defined at module scope - this is correct)
-const CAUSES_QUERY = `*[_type == "cause" && defined(slug.current)] | order(_createdAt desc)[0...3] {
-  _id, title, slug, description, raised, goal, image
-}`
+// 🔑 Queries
+const CAUSES_QUERY = `*[_type == "cause" && defined(slug.current)] {
+  _id, title, slug, description, raised, goal, image, featured
+} | order(featured desc, _createdAt desc)[0...3]`
 
 const POSTS_QUERY = `*[_type == "post"] | order(publishedAt desc)[0...3] {
   _id, title, slug, excerpt, mainImage, publishedAt
@@ -67,13 +68,13 @@ export default async function HomePage() {
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium border border-white/20 mx-auto">
             <Shield className="w-4 h-4 text-orange-400" />
-            Est. 2013 • 1 Country • 12,400+ Lives Impacted
+            Est. 2024 • Uganda • 30+ Lives Impacted
           </div>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight drop-shadow-lg">
             Compassion in Action. <span className="text-orange-400">Change Starts Here.</span>
           </h1>
           <p className="text-xl md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto drop-shadow-md">
-            Qalbin Saliim empowers underserved communities through clean water, education, healthcare, and sustainable development.
+            Qalbin Saliim empowers underserved communities through clean water, education, vocational training, and sustainable development.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link href="/donate">
@@ -93,8 +94,8 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { icon: Shield, label: '100% Transparent', desc: 'Reports published quarterly' },
-              { icon: Globe, label: '9+ Countries', desc: 'Serving communities across Africa' },
-              { icon: Users, label: '12,400+ Lives', desc: 'Impacted since 2010' },
+              { icon: Globe, label: '2+ Districts', desc: 'Serving communities across Uganda' },
+              { icon: Users, label: '30+ Lives', desc: 'Impacted since 2024' },
               { icon: Heart, label: 'Community-Led', desc: 'Local leaders drive solutions' },
             ].map((item) => (
               <div key={item.label} className="space-y-3">
@@ -107,33 +108,56 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* PARTNERS MARQUEE - CMS POWERED */}
+      {/* ✅ SIMPLE, ROBUST PARTNERS MARQUEE */}
       {partners.length > 0 && (
-        <section className="py-8 bg-white border-b border-border overflow-hidden group">
-          <p className="text-center text-sm text-muted-foreground mb-4 font-medium">Trusted by communities & partners across Africa</p>
+        <section className="py-6 bg-white border-b border-gray-100 overflow-hidden">
+          <p className="text-center text-sm text-gray-500 mb-4 font-medium">
+            Trusted by communities & partners across Africa
+          </p>
           
-          <div className="relative flex overflow-x-hidden">
-            <div className="animate-marquee whitespace-nowrap flex gap-12 items-center group-hover:[animation-play-state:paused]">
+          {/* Marquee Container */}
+          <div className="relative overflow-hidden">
+            <div className="animate-marquee flex gap-8 items-center whitespace-nowrap will-change-transform">
+              {/* Double the partners for seamless loop */}
               {[...partners, ...partners].map((partner, idx) => (
-                <div key={`${partner._id}-${idx}`} className="flex items-center">
+                <div 
+                  key={`${partner._id}-${idx}`} 
+                  className="flex-shrink-0 flex items-center justify-center"
+                >
                   {partner.website ? (
-                    <a href={partner.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-primary transition">
+                    <a 
+                      href={partner.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="block opacity-70 hover:opacity-100 transition duration-300"
+                      aria-label={`Visit ${partner.name}`}
+                    >
                       {partner.logoUrl ? (
-                        <img src={partner.logoUrl} alt={partner.name} className="h-10 w-auto object-contain opacity-70 hover:opacity-100 transition" />
+                        <img 
+                          src={partner.logoUrl} 
+                          alt={partner.name} 
+                          className="h-10 md:h-12 w-auto object-contain" 
+                          loading="lazy"
+                        />
                       ) : (
-                        <div className="h-12 px-8 flex items-center justify-center bg-gray-50 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:border-primary/30 hover:shadow-md transition whitespace-nowrap">
+                        <span className="text-sm text-gray-600 font-medium px-2">
                           {partner.name}
-                        </div>
+                        </span>
                       )}
                     </a>
                   ) : (
-                    <div className="flex items-center gap-3 text-gray-400 hover:text-primary transition">
+                    <div className="opacity-70">
                       {partner.logoUrl ? (
-                        <img src={partner.logoUrl} alt={partner.name} className="h-10 w-auto object-contain opacity-70 hover:opacity-100 transition" />
+                        <img 
+                          src={partner.logoUrl} 
+                          alt={partner.name} 
+                          className="h-10 md:h-12 w-auto object-contain" 
+                          loading="lazy"
+                        />
                       ) : (
-                        <div className="h-12 px-8 flex items-center justify-center bg-gray-50 rounded-xl text-sm font-semibold text-gray-600 border border-gray-200 hover:border-primary/30 hover:shadow-md transition whitespace-nowrap">
+                        <span className="text-sm text-gray-600 font-medium px-2">
                           {partner.name}
-                        </div>
+                        </span>
                       )}
                     </div>
                   )}
@@ -153,10 +177,10 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { target: 142, suffix: '+', label: 'Projects Completed' },
-              { target: 85, suffix: '', label: 'Communities Served' },
-              { target: 28, suffix: 'K+', label: 'Volunteer Hours' },
-              { target: 92, suffix: '%', label: 'Funds to Programs' },
+              { target: 0, suffix: '', label: 'Projects Completed' },
+              { target: 6, suffix: '+', label: 'Communities Served' },
+              { target: 0, suffix: '', label: 'Volunteer Hours' },
+              { target: 60, suffix: '%', label: 'Funds to Programs' },
             ].map((stat, i) => (
               <div key={stat.label} className={`card-premium p-8 text-center hover-glow animate-fade-in-up delay-${i*100}`}>
                 <p className="text-4xl font-bold text-gradient">
@@ -301,7 +325,7 @@ export default async function HomePage() {
       <section className="py-20 px-6 md:px-12 bg-gradient-to-br from-blue-900 to-indigo-900 text-white relative overflow-hidden">
         <div className="relative max-w-3xl mx-auto text-center space-y-8">
           <h2 className="text-3xl md:text-4xl font-bold">Stay Updated on Our Impact</h2>
-          <p className="text-xl text-blue-200">Join 5,000+ supporters receiving monthly updates, success stories, and ways to get involved.</p>
+          <p className="text-xl text-blue-200">Join 20+ supporters receiving monthly updates, success stories, and ways to get involved.</p>
           <div className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl border border-white/20 shadow-xl">
             {/* ✅ Pass source for tracking */}
             <NewsletterForm source="Homepage" />

@@ -57,12 +57,15 @@ export default async function ContactPage() {
                   <p className="text-gray-600">+256 756 808 274</p>
                   <p className="text-gray-600">+256 780 112 353</p>
                 </div>
+              </div>
+              <div className="flex items-start gap-4">
                 <div className="p-3 bg-blue-100 text-blue-600 rounded-lg"><Phone className="w-6 h-6" /></div>
                 <div>
                   <p className="font-semibold text-gray-900">For Support</p>
                   <p className="text-gray-600">+256 764 455 600</p>
                   <p className="text-gray-600">+256 741 378 654</p>
                 </div>
+
               </div>
             </div>
 

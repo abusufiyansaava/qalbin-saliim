@@ -41,5 +41,13 @@ export const cause = defineType({
       type: 'image',
       options: { hotspot: true },
     }),
+    // Inside the fields array in cause.ts, add:
+    defineField({
+      name: 'featured',
+      title: 'Show on Homepage',
+      type: 'boolean',
+      description: 'Check this to display this cause in the Featured Causes section on the homepage',
+      initialValue: false,
+    }),
   ],
 })

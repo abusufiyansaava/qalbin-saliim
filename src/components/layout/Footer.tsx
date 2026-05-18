@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="md:col-span-2 space-y-4">
           <h3 className="text-xl font-bold text-white">Qalbin Saliim</h3>
           <p className="text-sm text-gray-400 max-w-md">
-            Empowering underserved communities through clean water, food, education, healthcare, and sustainable development.
+            Empowering underserved communities through clean water, food, education, vocational training, iftaar preparation, dhuhiya preparation, and sustainable development.
           </p>
           <div className="flex gap-4 pt-2">
             {/* Social placeholders - add real links later */}

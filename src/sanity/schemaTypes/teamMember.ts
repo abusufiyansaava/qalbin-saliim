@@ -14,5 +14,18 @@ export const teamMember = defineType({
       { name: 'linkedin', title: 'LinkedIn URL', type: 'url' },
       { name: 'twitter', title: 'Twitter URL', type: 'url' },
     ]}),
+    // ✅ ADD THIS FIELD:
+    defineField({ 
+      name: 'order', 
+      title: 'Display Order', 
+      type: 'number', 
+      description: 'Lower numbers appear first. E.g., 1 = Founder, 2 = Director, 3 = Manager',
+      initialValue: 10,
+    }),
+  ],
+  // ✅ Optional: Set default ordering in Sanity Studio
+  orderings: [
+    { title: 'Display Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] },
+    { title: 'Name', name: 'nameAsc', by: [{ field: 'name', direction: 'asc' }] },
   ],
 })

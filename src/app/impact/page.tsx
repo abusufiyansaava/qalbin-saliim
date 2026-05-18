@@ -5,11 +5,12 @@ import { AnimatedCounter } from '@/components/shared/AnimatedCounter'
 import { client, urlFor } from '@/lib/sanity'
 import { 
   ArrowRight, Download, MapPin, Droplets, GraduationCap, 
-  Heart, Users, TrendingUp, CheckCircle, Play, FileText 
+  Heart, Users, TrendingUp, CheckCircle, Play, FileText,
+  Target, HandHeart
 } from 'lucide-react'
 
 // CMS Queries
-const CAUSES_QUERY = `*[_type == "cause"] | order(_createdAt desc) {
+const CAUSES_QUERY = `*[_type == "cause"] | order(_createdAt desc)[0...3] {
   _id, title, slug, description, raised, goal, image, location
 }`
 const TRANSFORMATIONS_QUERY = `*[_type == "transformation"] | order(order asc) {
@@ -22,17 +23,24 @@ const REPORTS_QUERY = `*[_type == "report" && featured == true] | order(publishe
   _id, title, "fileUrl": file.asset->url, "fileName": file.asset->originalFilename, description, category, publishedAt
 }`
 
+// Add this with your other queries:
+const MILESTONES_QUERY = `*[_type == "milestone" && featured == true] | order(order asc) {
+  _id, title, value, location, icon
+}`
+
 export default async function ImpactPage() {
   let causes: any[] = []
   let transformations: any[] = []
   let video: any = null
   let reports: any[] = []
+  let milestones: any[] = []
   
   try {
     causes = await client.fetch(CAUSES_QUERY)
     transformations = await client.fetch(TRANSFORMATIONS_QUERY)
     video = await client.fetch(VIDEO_QUERY)
     reports = await client.fetch(REPORTS_QUERY)
+    milestones = await client.fetch(MILESTONES_QUERY)
   } catch (error) {
     console.warn('Failed to fetch impact ', error)
   }
@@ -79,30 +87,119 @@ export default async function ImpactPage() {
         </div>
       </section>
 
-      {/* OVERALL PROGRESS */}
+      {/* ✅ NEW: IMPACT DASHBOARD - Fund Allocation + Milestones */}
       <section className="py-16 px-6 md:px-12 bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-gray-50 to-white p-8 md:p-12 rounded-3xl border border-gray-200 shadow-sm">
-            <div className="grid md:grid-cols-3 gap-8 items-center">
-              <div className="relative w-40 h-40 mx-auto">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="hsl(var(--primary))" strokeWidth="8" strokeDasharray={`${overallPercent * 2.83} 283`} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">{overallPercent}%</span>
+          <div className="grid lg:grid-cols-2 gap-12">
+            
+            {/* LEFT: Fund Allocation */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900">How Your Donation Is Used</h3>
               </div>
-              <div className="md:col-span-2 text-center md:text-left space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">Overall Funding Progress</h3>
-                <p className="text-gray-600">Across all active causes, we're {overallPercent}% toward our annual goal.</p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-6 pt-2">
-                  <div><p className="text-2xl font-bold text-primary">${(totalRaised / 1000).toFixed(1)}K</p><p className="text-sm text-gray-500">Raised</p></div>
-                  <div><p className="text-2xl font-bold text-gray-400">${(totalGoal / 1000).toFixed(1)}K</p><p className="text-sm text-gray-500">Goal</p></div>
-                  <div><p className="text-2xl font-bold text-emerald-600">{causes.length}</p><p className="text-sm text-gray-500">Active Causes</p></div>
+              
+              <p className="text-gray-600 leading-relaxed">
+                We maintain radical transparency. Here's exactly where every shilling goes:
+              </p>
+              
+              <div className="space-y-4 pt-2">
+                {[
+                  { label: 'Direct Programs', value: 92, color: 'bg-emerald-500', desc: 'Wells, schools, training, relief supplies' },
+                  { label: 'Operations', value: 6, color: 'bg-blue-500', desc: 'Staff, technology, compliance' },
+                  { label: 'Fundraising', value: 2, color: 'bg-amber-500', desc: 'Donor outreach, reporting' },
+                ].map((item) => (
+                  <div key={item.label} className="space-y-2">
+                    <div className="flex justify-between text-sm font-medium">
+                      <span className="text-gray-700">{item.label}</span>
+                      <span className="text-gray-900 font-bold">{item.value}%</span>
+                    </div>
+                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div className={`h-full ${item.color} rounded-full transition-all duration-700`} style={{ width: `${item.value}%` }} />
+                    </div>
+                    <p className="text-xs text-gray-500">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="pt-4 flex items-start gap-3 text-sm text-emerald-700 bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium">Financial reports published quarterly</p>
+                  <p className="text-emerald-600 mt-1">
+                    <Link href="/contact" className="underline hover:text-emerald-800">Request detailed breakdown</Link> anytime.
+                  </p>
                 </div>
               </div>
             </div>
+
+            {/* RIGHT: Impact Milestones (CMS-Powered) */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <Target className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Impact Milestones</h3>
+              </div>
+              
+              <p className="text-gray-600 leading-relaxed">
+                Real outcomes from your support — updated as projects complete.
+              </p>
+
+              {milestones.length === 0 ? (
+                <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                  <Target className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 font-medium">Milestones will appear here</p>
+                  <p className="text-sm text-gray-400 mt-1">Add them in Sanity Studio → Impact Milestones</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {milestones.map((milestone: any) => {
+                    // Map icon names to Lucide components
+                    const iconMap: Record<string, any> = {
+                      droplets: Droplets,
+                      graduationCap: GraduationCap,
+                      heart: Heart,
+                      users: Users,
+                      award: Award,
+                      trendingUp: TrendingUp,
+                      target: Target,
+                      handHeart: HandHeart,
+                    }
+                    const Icon = iconMap[milestone.icon] || Heart
+
+                    return (
+                      <div 
+                        key={milestone._id} 
+                        className="bg-gradient-to-br from-gray-50 to-white p-5 rounded-xl border border-gray-200 hover:shadow-md hover:border-primary/30 transition group"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Icon className="w-5 h-5 text-primary" />
+                          </div>
+                          {milestone.location && (
+                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                              {milestone.location}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-3xl font-bold text-gray-900 mb-1">{milestone.value}</p>
+                        <p className="text-sm text-gray-600 font-medium leading-tight">{milestone.title}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              <div className="pt-2 text-center">
+                <p className="text-xs text-gray-500">
+                  ✨ Updated in real-time by our field teams
+                </p>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
@@ -116,10 +213,10 @@ export default async function ImpactPage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: Droplets, target: 87, suffix: '+', label: 'Wells Built', color: 'text-blue-600' },
-              { icon: GraduationCap, target: 3200, suffix: '+', label: 'Students Educated', color: 'text-emerald-600' },
-              { icon: Heart, target: 12400, suffix: '+', label: 'Lives Impacted', color: 'text-rose-600' },
-              { icon: Users, target: 85, suffix: '', label: 'Communities Served', color: 'text-violet-600' },
+              { icon: Droplets, target: 0, suffix: '+', label: 'Boreholes Drilled', color: 'text-blue-600' },
+              { icon: GraduationCap, target: 8, suffix: '+', label: 'Students Educated', color: 'text-emerald-600' },
+              { icon: Heart, target: 30, suffix: '+', label: 'Lives Impacted', color: 'text-rose-600' },
+              { icon: Users, target: 6, suffix: '', label: 'Communities Served', color: 'text-violet-600' },
             ].map((stat) => (
               <div key={stat.label} className="bg-white p-8 rounded-2xl text-center border border-gray-200 hover:shadow-lg transition group">
                 <div className={`w-14 h-14 ${stat.color} bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>

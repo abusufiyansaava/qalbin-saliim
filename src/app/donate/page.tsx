@@ -167,10 +167,9 @@ export default function DonatePage() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Make a Donation</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Support Qalbin Saliim Organisation</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Your generosity powers clean water, education, and sustainable community growth. 
-            Donate via bank transfer or Mobile Money — secure, direct, and 100% transparent.
+            Compassion to Self-Reliance: Serving the Ummah with Dignity and Purpose.
           </p>
         </div>
 

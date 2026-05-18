@@ -11,6 +11,6 @@ import { partner } from './partner'
 import { volunteerApplication } from './volunteerApplication'
 import { newsletterSubscription } from './newsletterSubscription'
 import { faq } from './faq'
-
+import { milestone } from './milestone'
 import { bankDonation } from './bankDonation'
-export const schemaTypes = [cause, galleryImage, teamMember, post, transformation, videoTestimonial, report, homeSettings, partner, volunteerApplication, newsletterSubscription, faq, bankDonation]
+export const schemaTypes = [cause, galleryImage, teamMember, post, transformation, videoTestimonial, report, homeSettings, partner, volunteerApplication, newsletterSubscription, faq, bankDonation, milestone]

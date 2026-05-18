@@ -11,7 +11,9 @@ import {
 } from 'lucide-react'
 
 // CMS Queries
-const TEAM_QUERY = `*[_type == "teamMember"] | order(name asc)`
+
+// ✅ After (hierarchy-based):
+const TEAM_QUERY = `*[_type == "teamMember"] | order(order asc, name asc)`
 const GALLERY_QUERY = `*[_type == "galleryImage" && featured == true] | order(date desc)[0...6]`
 
 export default async function AboutPage() {
@@ -38,13 +40,13 @@ export default async function AboutPage() {
         <div className="relative max-w-4xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
             <CheckCircle className="w-4 h-4" />
-            Est. 2013 • 1 Country • 12,400+ Lives Impacted
+            Est. 2024 • Uganda • 30+ Lives Impacted
           </div>
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             Compassion That <span className="text-blue-200">Transforms</span> Communities
           </h1>
           <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
-            For over a decade, Qalbin Saliim has partnered with underserved communities across Africa to create sustainable change through clean water, education, healthcare, and economic empowerment.
+            For over Two Years, Qalbin Saliim has partnered with underserved communities across Uganda to create sustainable change through clean water, education, and economic empowerment.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link href="/donate">
@@ -74,7 +76,10 @@ export default async function AboutPage() {
                 <h2 className="text-3xl font-bold text-gray-900">Our Mission</h2>
               </div>
               <p className="text-gray-600 leading-relaxed text-lg">
-                To empower underserved communities by providing sustainable access to clean water, food, quality education, healthcare, and economic opportunities — creating lasting change that transcends generations.
+                QALBIN SALIIM ORGANISATION exists to provide basic needs, education support, vocational training, relief funds, 
+                clothing, and dignified care for orphans, the elderly, and widows. We distribute the Noble Quran, drill boreholes for clean water,
+                build Islamic schools and mosques, and Zakatul-Fitr programs to serve our community and uphold the values of compassion, solidarity,
+                self-reliance, Islamic knowledge and worship.
               </p>
               <ul className="space-y-3 pt-2">
                 {[
@@ -100,7 +105,8 @@ export default async function AboutPage() {
                 <h2 className="text-3xl font-bold text-gray-900">Our Vision</h2>
               </div>
               <p className="text-gray-600 leading-relaxed text-lg">
-                A world where every individual, regardless of circumstance, has the opportunity to thrive — where communities are resilient, self-sufficient, and filled with hope.
+                Supporting orphans, widows, and the elderly with basic needs, education, vocational training, relief, clothing, Quran distribution,
+                and clean water. We build Islamic schools and mosques, and facilitate Iftaar, Duhiya, and Zakatul-Fitr for the sake of Allah.
               </p>
               <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-indigo-100">
                 <p className="text-indigo-900 font-medium italic">
@@ -147,7 +153,7 @@ export default async function AboutPage() {
       <section className="py-20 px-6 md:px-12 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Measurable Impact Since 2013</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Measurable Impact Since 2024</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               We don't just promise change — we measure it, report it, and improve it.
             </p>
@@ -155,10 +161,10 @@ export default async function AboutPage() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { target: 142, suffix: '+', label: 'Projects Completed' },
-              { target: 85, suffix: '', label: 'Communities Served' },
-              { target: 12400, suffix: '+', label: 'Lives Impacted' },
-              { target: 92, suffix: '%', label: 'Funds to Programs' },
+              { target: 0, suffix: '', label: 'Projects Completed' },
+              { target: 6, suffix: '', label: 'Communities Served' },
+              { target: 30, suffix: '+', label: 'Lives Impacted' },
+              { target: 60, suffix: '%', label: 'Funds to Programs' },
             ].map((stat) => (
               <div key={stat.label} className="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl text-center border border-gray-200 hover:shadow-md transition">
                 <p className="text-4xl md:text-5xl font-bold text-primary">
@@ -184,10 +190,10 @@ export default async function AboutPage() {
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200" />
             
             {[
-              { year: '2013', title: 'Founded in Kampala', desc: 'Qalbin Saliim launches with a focus on clean water access in Northern Uganda.' },
-              { year: '2014', title: 'First Education Program', desc: 'Expanded to drill a borehole in 3 districts.' },
-              { year: '2018', title: 'Healthcare Initiative', desc: 'Launched mobile clinics serving remote villages across 5 regions.' },
-              { year: '2022', title: '10,000 Lives Milestone', desc: 'Reached our goal of impacting 10,000+ individuals through sustainable programs.' },
+              { year: '2024', title: 'Founded in Kampala', desc: 'Qalbin Saliim launches with a focus on clean water access, educating three orphans, and iftar programs in Uganda.' },
+              { year: '2025', title: 'Education Program', desc: 'The number of orphans educated increased to five, who were all under the organisation ' },
+              { year: '2025', title: 'Iftaar and Dhuhiya', desc: 'Qalbin Saliim managed to prepare Iftaar for Muslims in Mayuge District and Dhuhiya for Muslims in Buikwe and Sembabule Districts in Uganda' },
+              { year: '2025', title: 'Life Impact', desc: 'Managed to change the lives of individuals through sustainable programs, and education support' },
               { year: '2026', title: 'Digital Transformation', desc: 'Launched this platform to increase transparency and donor engagement.' },
             ].map((item, i) => (
               <div key={item.year} className={`relative flex items-center gap-8 mb-12 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>

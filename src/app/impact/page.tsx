@@ -6,7 +6,7 @@ import { client, urlFor } from '@/lib/sanity'
 import { 
   ArrowRight, Download, MapPin, Droplets, GraduationCap, 
   Heart, Users, TrendingUp, CheckCircle, Play, FileText,
-  Target, HandHeart
+  Target, HandHeart, Award
 } from 'lucide-react'
 
 // CMS Queries

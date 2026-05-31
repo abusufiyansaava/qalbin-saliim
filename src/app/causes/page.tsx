@@ -4,6 +4,9 @@ import { client, urlFor } from '@/lib/sanity'
 import { Button } from '@/components/ui/Button'
 import { CheckCircle } from 'lucide-react'
 
+// ✅ ADD THIS: Revalidate gallery data every 60 seconds
+export const revalidate = 60
+
 const CAUSES_QUERY = `*[_type == "cause" && defined(slug.current)] | order(_createdAt desc) {
   _id, title, slug, description, raised, goal, image
 }`

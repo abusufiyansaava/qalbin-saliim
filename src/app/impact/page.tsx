@@ -9,6 +9,9 @@ import {
   Target, HandHeart, Award
 } from 'lucide-react'
 
+// ✅ ADD THIS: Revalidate gallery data every 60 seconds
+export const revalidate = 60
+
 // CMS Queries
 const CAUSES_QUERY = `*[_type == "cause"] | order(_createdAt desc)[0...3] {
   _id, title, slug, description, raised, goal, image, location

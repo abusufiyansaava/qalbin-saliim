@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/Button'
 import { ArrowLeft, Target, TrendingUp, Heart } from 'lucide-react'
 import Link from 'next/link'
 
+// ✅ ADD THIS: Revalidate gallery data every 60 seconds
+export const revalidate = 60
+
 // Fetch cause by slug
 const CAUSE_QUERY = `*[_type == "cause" && slug.current == $slug][0] {
   _id, title, slug, description, raised, goal, image

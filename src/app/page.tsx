@@ -6,6 +6,9 @@ import { client, urlFor } from '@/lib/sanity'
 import { AnimatedCounter } from '@/components/shared/AnimatedCounter'
 import { NewsletterForm } from '@/components/shared/NewsletterForm'
 
+// ✅ ADD THIS: Revalidate gallery data every 60 seconds
+export const revalidate = 60
+
 // 🔑 Queries (defined at module scope - this is correct)
 // 🔑 Queries
 const CAUSES_QUERY = `*[_type == "cause" && defined(slug.current)] {
@@ -260,7 +263,7 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 gap-8">
             {[
               { quote: "Before the water project, I walked 6 miles daily. Now my children attend school instead of fetching water.", author: "Amina K.", location: "Mbale District" },
-              { quote: "The youth center gave me skills I never imagined. Today I run my own tailoring business.", author: "David M.", location: "Kabale District" },
+              { quote: "The youth center gave me skills I never imagined. Today I run my own tailoring business.", author: "Hamza M.", location: "Kabale District" },
             ].map((story, i) => (
               <div key={story.author} className={`card-premium p-8 text-left animate-fade-in-up delay-${i*100}`}>
                 <p className="text-foreground italic mb-6 text-lg leading-relaxed">"{story.quote}"</p>

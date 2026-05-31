@@ -2,6 +2,9 @@
 import { client, urlFor } from '@/lib/sanity'
 import Image from 'next/image'
 
+// ✅ ADD THIS: Revalidate gallery data every 60 seconds
+export const revalidate = 60
+
 // ✅ Show ALL gallery images (not just featured), sorted by newest first
 const GALLERY_QUERY = `*[_type == "galleryImage"] | order(date desc) {
   _id, title, "imageUrl": image.asset->url, description, location, category, date

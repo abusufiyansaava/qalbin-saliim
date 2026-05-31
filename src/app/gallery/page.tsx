@@ -2,8 +2,9 @@
 import { client, urlFor } from '@/lib/sanity'
 import Image from 'next/image'
 
-const GALLERY_QUERY = `*[_type == "galleryImage" && featured == true] | order(order asc) {
-  _id, title, "imageUrl": image.asset->url, description, location, category
+// ✅ Show ALL gallery images (not just featured), sorted by newest first
+const GALLERY_QUERY = `*[_type == "galleryImage"] | order(date desc) {
+  _id, title, "imageUrl": image.asset->url, description, location, category, date
 }`
 
 export async function generateMetadata() {
@@ -60,8 +61,16 @@ export default async function GalleryPage() {
                   {image.description && <p className="text-sm text-gray-600 line-clamp-2">{image.description}</p>}
                   {(image.location || image.category) && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {image.location && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{image.location}</span>}
-                      {image.category && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">{image.category}</span>}
+                      {image.location && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                          {image.location}
+                        </span>
+                      )}
+                      {image.category && (
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                          {image.category}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>

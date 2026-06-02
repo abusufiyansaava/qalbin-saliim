@@ -19,8 +19,16 @@ const CAUSES_QUERY = `*[_type == "cause"] | order(_createdAt desc)[0...3] {
 const TRANSFORMATIONS_QUERY = `*[_type == "transformation"] | order(order asc) {
   _id, title, beforeText, afterText, image, location, stat
 }`
+// Replace the old VIDEO_QUERY with this:
 const VIDEO_QUERY = `*[_type == "videoTestimonial" && featured == true] | order(_createdAt desc)[0] {
-  _id, title, quote, speakerName, speakerLocation, thumbnail, videoUrl
+  _id, title, quote, speakerName, speakerLocation, thumbnail,
+  "videoType": video.type,
+  "videoUrl": video.externalUrl,
+  "videoFile": video.uploadedFile {
+    _type, asset-> {
+      _id, url, mimeType, size
+    }
+  }
 }`
 const REPORTS_QUERY = `*[_type == "report" && featured == true] | order(publishedAt desc) {
   _id, title, "fileUrl": file.asset->url, "fileName": file.asset->originalFilename, description, category, publishedAt
@@ -277,7 +285,7 @@ export default async function ImpactPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Transformation in Action</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">See the tangible difference your support makes in communities across Africa.</p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">See the tangible difference your support makes in communities across Uganda.</p>
           </div>
           {transformations.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
@@ -308,23 +316,57 @@ export default async function ImpactPage() {
       </section>
 
       {/* VIDEO TESTIMONIAL */}
+      {/* VIDEO TESTIMONIAL - UPDATED FOR HYBRID SUPPORT */}
       <section className="py-20 px-6 md:px-12 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           {video ? (
             <>
               <div className="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 mb-8 group cursor-pointer shadow-lg">
-                <img src={urlFor(video.thumbnail).width(1200).url()} alt={video.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition" />
+                {/* Thumbnail */}
+                <img 
+                  src={urlFor(video.thumbnail).width(1200).url()} 
+                  alt={video.title} 
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition" 
+                />
+                
+                {/* Play Button + Link */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <a href={video.videoUrl || '#'} target="_blank" rel="noopener noreferrer" className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
-                    <Play className="w-8 h-8 text-primary ml-1" />
-                  </a>
+                  {video.videoType === 'external' ? (
+                    // External link (YouTube/Vimeo)
+                    <a 
+                      href={video.videoUrl || '#'} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition"
+                      aria-label={`Watch ${video.title}`}
+                    >
+                      <Play className="w-8 h-8 text-primary ml-1" />
+                    </a>
+                  ) : video.videoFile?.asset?.url ? (
+                    // Direct upload - use HTML5 video
+                    <video 
+                      controls 
+                      className="w-full h-full object-cover"
+                      poster={urlFor(video.thumbnail).width(1200).url()}
+                    >
+                      <source src={video.videoFile.asset.url} type={video.videoFile.asset.mimeType || 'video/mp4'} />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : null}
                 </div>
+                
+                {/* Quote Overlay */}
                 <div className="absolute bottom-4 left-4 right-4 text-left">
                   <p className="text-white font-semibold drop-shadow-md line-clamp-1">"{video.quote}"</p>
-                  <p className="text-white/90 text-sm drop-shadow-md">— {video.speakerName}{video.speakerLocation && `, ${video.speakerLocation}`}</p>
+                  <p className="text-white/90 text-sm drop-shadow-md">
+                    — {video.speakerName}{video.speakerLocation && `, ${video.speakerLocation}`}
+                  </p>
                 </div>
               </div>
-              <p className="text-gray-600 max-w-2xl mx-auto">Watch real stories from community members whose lives have been transformed through your support.</p>
+              
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Watch real stories from community members whose lives have been transformed through your support.
+              </p>
             </>
           ) : (
             <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden border border-gray-200 mb-8 flex items-center justify-center">

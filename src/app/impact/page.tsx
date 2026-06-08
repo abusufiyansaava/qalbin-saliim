@@ -271,7 +271,7 @@ export default async function ImpactPage() {
                       <div className="flex justify-between text-sm"><span className="font-medium text-gray-700">${(cause.raised || 0).toLocaleString()} raised</span><span className="text-gray-500">${(cause.goal || 0).toLocaleString()} goal</span></div>
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden"><div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${percent}%` }} /></div>
                     </div>
-                    <Button asChild className="w-full group-hover:bg-primary/90 transition"><Link href={`/causes/${cause.slug.current}`}>Support This Project</Link></Button>
+                    <Button asChild className="w-full group-hover:bg-primary/90 transition"><Link href={`/causes/${cause.slug}`}>Support This Project</Link></Button>
                   </div>
                 </div>
               )

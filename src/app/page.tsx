@@ -12,11 +12,11 @@ export const revalidate = 60
 // 🔑 Queries (defined at module scope - this is correct)
 // 🔑 Queries
 const CAUSES_QUERY = `*[_type == "cause" && defined(slug.current)] {
-  _id, title, slug, description, raised, goal, image, featured
+  _id, title, "slug": slug.current, description, raised, goal, image, featured
 } | order(featured desc, _createdAt desc)[0...3]`
 
-const POSTS_QUERY = `*[_type == "post"] | order(publishedAt desc)[0...3] {
-  _id, title, slug, excerpt, mainImage, publishedAt
+const POSTS_QUERY = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...3] {
+  _id, title, "slug": slug.current, excerpt, mainImage, publishedAt
 }`
 
 const HERO_QUERY = `*[_type == "homeSettings"][0] {
@@ -240,7 +240,7 @@ export default async function HomePage() {
                         <span className="text-xs text-muted-foreground">{percent}% funded</span>
                       </div>
                       <Link
-                        href={`/causes/${cause.slug.current}`}
+                        href={`/causes/${cause.slug}`}
                         className="inline-flex items-center justify-center rounded-xl text-sm font-medium transition-colors border border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-primary hover:text-white hover:border-primary h-10 px-4 py-2 w-full transition"
                       >
                         Support This Cause
@@ -302,7 +302,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid md:grid-cols-3 gap-8">
               {posts.map((post: any, i) => (
-                <Link key={post._id} href={`/blog/${post.slug.current}`} className={`card-premium group block overflow-hidden animate-fade-in-up delay-${i*100}`}>
+                <Link key={post._id} href={`/blog/${post.slug}`} className={`card-premium group block overflow-hidden animate-fade-in-up delay-${i*100}`}>
                   <div className="h-44 bg-muted overflow-hidden">
                     {post.mainImage ? (
                       <img src={urlFor(post.mainImage).width(400).url()} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />

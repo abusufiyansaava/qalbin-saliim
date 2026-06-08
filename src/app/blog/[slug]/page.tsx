@@ -15,7 +15,11 @@ const POST_QUERY = `*[_type == "post" && slug.current == $slug][0] {
 // Generate static params for build-time optimization
 export async function generateStaticParams() {
   const posts = await client.fetch(`*[_type == "post"] { "slug": slug.current }`)
-  return posts.map((post: any) => ({ slug: post.slug }))
+  
+  // ✅ Ensure slug is a string, not an object
+  return posts.map((post: any) => ({
+    slug: String(post.slug) // Converts to string safely
+  }))
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {

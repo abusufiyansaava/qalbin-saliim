@@ -255,7 +255,7 @@ export default async function HomePage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="section-premium bg-background">
+      {/*/<section className="section-premium bg-background">
         <div className="container-premium max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">Stories of Change</h2>
@@ -280,7 +280,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* BLOG PREVIEW */}
       <section className="section-premium section-alt">
